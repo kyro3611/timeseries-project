@@ -4,7 +4,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th></th>
+                        <th>Date and Time</th>
                         <th>DE</th>
                         <th>GR</th>
                         <th>FR</th>
@@ -56,20 +56,21 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 40%;
     height: 100vh;
 }
 
 .table-container {
     margin-top: 0;
-    height: calc(100vh - 20px); /* Adjust for padding/margins */
+    height: calc(100vh - 20px);
     overflow-y: auto;
     overflow-x: auto;
-    width: 50%;
+    flex: 1;
+    border: 1px solid #ccc;
 }
 
 table {
-    top: 0;
+    margin-top: 0;
     width: 100%;
     border-collapse: collapse;
 }
@@ -89,9 +90,10 @@ td {
 
 th {
     position: sticky;
+    border-right: 1px solid #ccc;
     top: 0;
     padding: 20px;
-    background-color: #49708a; /* Ensure background is visible when sticky */
+    background-color: #49708a;
     color: white;
 }
 

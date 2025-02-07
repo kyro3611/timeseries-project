@@ -36,7 +36,6 @@ export default {
         fetch("/timeseries.json")
             .then(response => response.json())
             .then(json => {
-                // Add formattedDate to each item
                 this.data = json.map(item => ({
                     ...item,
                     formattedDate: this.formatDate(item.DateTime)
@@ -46,7 +45,6 @@ export default {
     },
     methods: {
         formatDate(date) {
-            // Format the DateTime using dayjs
             return dayjs(date).format('DD-MM-YYYY HH:mm');
         }
     }
@@ -58,18 +56,22 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    height: 100vh;
 }
 
 .table-container {
-    overflow-x: auto;
+    margin-top: 0;
+    height: calc(100vh - 20px); /* Adjust for padding/margins */
     overflow-y: auto;
-    padding: 16px;
+    overflow-x: auto;
+    width: 50%;
 }
 
 table {
+    top: 0;
     width: 100%;
     border-collapse: collapse;
-    border: 1px solid #ccc;
 }
 
 thead {
@@ -78,7 +80,6 @@ thead {
     z-index: 1000;
 }
 
-th,
 td {
     padding: 10px;
     border: 1px solid #ccc;
@@ -87,7 +88,10 @@ td {
 }
 
 th {
-    background-color: #49708a;
+    position: sticky;
+    top: 0;
+    padding: 20px;
+    background-color: #49708a; /* Ensure background is visible when sticky */
     color: white;
 }
 

@@ -1,8 +1,5 @@
 <template>
     <div class="table-wrapper">
-        <div v-if="loading" class="spinner-container">
-            <div class="spinner"></div>
-        </div>
         <div class="table-container">
             <table>
                 <thead>
@@ -33,12 +30,26 @@ export default {
         data: {
             type: Array,
             required: true,
+        },
+        loading: {
+            type: Boolean,
+            required: true,
+        },
+        startDate: {
+            type: String,
+            required: true,
+        },
+        endDate: {
+            type: Date,
+            required: true,
+        },
+    },
+    watch: {
+        startDate(newVal) {
+            console.log('table', newVal)
         }
     },
-    loading: {
-        type: Boolean,
-        required: true,
-    },
+
 };
 </script>
 
@@ -60,14 +71,19 @@ export default {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
+
 .table-wrapper {
-    display: flex;
     justify-content: center;
     align-items: center;
-    width: 40%;
+    width: 80%;
     height: 100vh;
 }
 
@@ -76,7 +92,6 @@ export default {
     height: calc(100vh - 20px);
     overflow-y: auto;
     overflow-x: auto;
-    flex: 1;
     border: 1px solid #ccc;
 }
 
@@ -89,7 +104,7 @@ table {
 thead {
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 900;
 }
 
 td {

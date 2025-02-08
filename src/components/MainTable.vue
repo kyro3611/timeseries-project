@@ -1,5 +1,8 @@
 <template>
     <div class="table-wrapper">
+        <div v-if="loading" class="spinner-container">
+            <div class="spinner"></div>
+        </div>
         <div class="table-container">
             <table>
                 <thead>
@@ -31,11 +34,35 @@ export default {
             type: Array,
             required: true,
         }
-    }
+    },
+    loading: {
+        type: Boolean,
+        required: true,
+    },
 };
 </script>
 
 <style>
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #ccc;
+    border-top: 4px solid #49708a;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 .table-wrapper {
     display: flex;
     justify-content: center;

@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
-    <MainTable :data="timeseriesData"/>
-    <LineChart :data="timeseriesData"/>
+    <MainTable :data="timeseriesData" :loading="isLoading" />
+    <LineChart :data="timeseriesData" :loading="isLoading" />
   </div>
 </template>
 
@@ -19,6 +19,7 @@ export default {
   data() {
     return {
       timeseriesData: [],
+      isLoading: true
     };
   },
   async created() {
@@ -36,6 +37,9 @@ export default {
         }));
       } catch (error) {
         console.error("Error loading JSON:", error);
+      }
+      finally {
+        this.isLoading = false;
       }
     },
   },

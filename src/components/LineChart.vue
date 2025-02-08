@@ -1,5 +1,8 @@
 <template>
     <div class="chart-container">
+        <div v-if="loading" class="spinner-container">
+            <div class="spinner"></div>
+        </div>
         <canvas ref="chartCanvas"></canvas>
     </div>
 </template>
@@ -11,6 +14,10 @@ export default {
     props: {
         data: {
             type: Array,
+            required: true,
+        },
+        loading: {
+            type: Boolean,
             required: true,
         },
     },
@@ -101,5 +108,26 @@ export default {
     height: 80%;
     position: relative;
     flex: 0.8; /* Takes 40% width */
+}
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #ccc;
+    border-top: 4px solid #49708a;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 </style>

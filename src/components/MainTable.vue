@@ -24,28 +24,12 @@
 </template>
 
 <script>
-import dayjs from 'dayjs'
 
 export default {
-    data() {
-        return {
-            data: [],
-        };
-    },
-    mounted() {
-        fetch("/timeseries.json")
-            .then(response => response.json())
-            .then(json => {
-                this.data = json.map(item => ({
-                    ...item,
-                    formattedDate: this.formatDate(item.DateTime)
-                }));
-            })
-            .catch(error => console.error("Error loading JSON:", error));
-    },
-    methods: {
-        formatDate(date) {
-            return dayjs(date).format('DD-MM-YYYY HH:mm');
+    props: {
+        data: {
+            type: Array,
+            required: true,
         }
     }
 };

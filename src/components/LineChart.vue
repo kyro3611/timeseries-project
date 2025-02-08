@@ -6,16 +6,30 @@
 
 <script>
 import Chart from "chart.js/auto";
-import dayjs from "dayjs";
 
 export default {
+    props: {
+        data: {
+            type: Array,
+            required: true,
+        },
+    },
     data() {
         return {
-            chartInstance: null, // Stores the chart instance
+            chartInstance: null, // Store the chart instance
         };
     },
+    watch: {
+        // Re-render chart when data changes
+        data: {
+            handler() {
+                this.renderChart();
+            },
+            deep: true, // Detects changes inside objects of data array
+        },
+    },
     mounted() {
-        this.fetchAndRenderChart(); // Fetch data when component mounts
+        this.renderChart();
     },
     beforeUnmount() {
         if (this.chartInstance) {
@@ -23,17 +37,14 @@ export default {
         }
     },
     methods: {
-        async fetchAndRenderChart() {
+        async renderChart() {
             try {
-                const response = await fetch("/timeseries.json");
-                const json = await response.json();
+                if (!this.data.length) return; // Prevent empty chart
 
-                const labels = json.map((item) =>
-                    dayjs(item.DateTime).format("DD-MM HH:mm")
-                );
-                const datasetDE = json.map((item) => item.ENTSOE_DE_DAM_Price);
-                const datasetGR = json.map((item) => item.ENTSOE_GR_DAM_Price);
-                const datasetFR = json.map((item) => item.ENTSOE_FR_DAM_Price);
+                const labels = this.data.map((item) => item.formattedDate);
+                const datasetDE = this.data.map((item) => item.ENTSOE_DE_DAM_Price);
+                const datasetGR = this.data.map((item) => item.ENTSOE_GR_DAM_Price);
+                const datasetFR = this.data.map((item) => item.ENTSOE_FR_DAM_Price);
 
                 if (this.chartInstance) this.chartInstance.destroy(); // Prevent duplicate charts
 
@@ -72,8 +83,8 @@ export default {
                             legend: { display: true },
                         },
                         scales: {
-                            x: { title: { display: true, text: "Time" } },
-                            y: { title: { display: true, text: "Value" } },
+                            x: { title: { display: true, text: "Date and Time" } },
+                            y: { title: { display: true, text: "Price" } },
                         },
                     },
                 });

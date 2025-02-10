@@ -1,4 +1,21 @@
 <template>
+    <div class="show-hide-container">
+        Show/Hide: 
+        <span class="eye-icon-container">
+            DE
+            <font-awesome-icon :icon="visibility.DE ? 'eye' : 'eye-slash'" @click="toggleColumn('DE')" class="eye-icon"/>
+        </span>
+        <span class="eye-icon-container">
+            GR
+            <font-awesome-icon :icon="visibility.GR ? 'eye' : 'eye-slash'" @click="toggleColumn('GR')" class="eye-icon"/>
+        </span>
+        <span class="eye-icon-container">
+            FR
+            <font-awesome-icon :icon="visibility.FR ? 'eye' : 'eye-slash'" @click="toggleColumn('FR')" class="eye-icon"/>
+        </span>
+    </div>
+    
+
     <div class="table-wrapper">
         <div class="table-container">
             <table>
@@ -8,9 +25,9 @@
                 <thead>
                     <tr>
                         <th>Date and Time</th>
-                        <th>DE</th>
-                        <th>GR</th>
-                        <th>FR</th>
+                        <th v-if="visibility.DE">DE</th>
+                        <th v-if="visibility.GR">GR</th>
+                        <th v-if="visibility.FR">FR</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -19,9 +36,21 @@
                     </div>
                     <tr v-for="(item, index) in data" :key="index">
                         <td class="time-column">{{ item.formattedDate }}</td>
-                        <td contenteditable="true" @focus="storePreviousValue(index, 'ENTSOE_DE_DAM_Price')" @blur="updateValue(index, 'ENTSOE_DE_DAM_Price', $event)">{{ item.ENTSOE_DE_DAM_Price }}</td>
-                        <td contenteditable="true" @focus="storePreviousValue(index, 'ENTSOE_GR_DAM_Price')" @blur="updateValue(index, 'ENTSOE_GR_DAM_Price', $event)">{{ item.ENTSOE_GR_DAM_Price }}</td>
-                        <td contenteditable="true" @focus="storePreviousValue(index, 'ENTSOE_FR_DAM_Price')" @blur="updateValue(index, 'ENTSOE_FR_DAM_Price', $event)">{{ item.ENTSOE_FR_DAM_Price }}</td>
+
+                        <td v-if="visibility.DE" contenteditable="true"
+                            @focus="storePreviousValue(index, 'ENTSOE_DE_DAM_Price')"
+                            @blur="updateValue(index, 'ENTSOE_DE_DAM_Price', $event)">{{ item.ENTSOE_DE_DAM_Price }}
+                        </td>
+
+                        <td v-if="visibility.GR" contenteditable="true"
+                            @focus="storePreviousValue(index, 'ENTSOE_GR_DAM_Price')"
+                            @blur="updateValue(index, 'ENTSOE_GR_DAM_Price', $event)">{{ item.ENTSOE_GR_DAM_Price }}
+                        </td>
+
+                        <td v-if="visibility.FR" contenteditable="true"
+                            @focus="storePreviousValue(index, 'ENTSOE_FR_DAM_Price')"
+                            @blur="updateValue(index, 'ENTSOE_FR_DAM_Price', $event)">{{ item.ENTSOE_FR_DAM_Price }}
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -52,10 +81,18 @@ export default {
     },
     data() {
         return {
-            previousValues: {}
+            previousValues: {},
+            visibility: {
+                DE: true,
+                GR: true,
+                FR: true,
+            },
         }
     },
     methods: {
+        toggleColumn(column) {
+            this.visibility[column] = !this.visibility[column];
+        },
         //save previous value for failed validation
         storePreviousValue(index, key) {
             this.previousValues[`${index}-${key}`] = this.data[index][key];
@@ -64,17 +101,17 @@ export default {
 
             const newValue = event.target.innerText;
             //validation check
-            if (isNaN(newValue)) { 
+            if (isNaN(newValue)) {
                 alert("Invalid input. Value must be a number between -200 and 200.");
                 event.target.innerText = this.previousValues[`${index}-${key}`];
                 return;
-            }else if (newValue < -200 || newValue > 200) {
+            } else if (newValue < -200 || newValue > 200) {
                 alert("Invalid input. Value must be between -200 and 200.");
                 //revert previous value
                 event.target.innerText = this.previousValues[`${index}-${key}`];
                 return;
             }
-            
+
             this.$emit("update-data", { index, key, newValue });
         },
     },
@@ -118,7 +155,7 @@ export default {
 
 .table-container {
     margin-top: 0;
-    height: calc(100vh - 20px);
+    height: calc(100vh - 50px);
     overflow-y: auto;
     overflow-x: auto;
     border: 1px solid #ccc;
@@ -161,5 +198,17 @@ th {
     margin-top: 30%;
     margin-left: 20%;
     font-size: 2vw;
+}
+
+.show-hide-container {
+    margin-bottom: 10px;
+}
+
+.eye-icon-container {
+    margin-left: 10px;
+}
+
+.eye-icon {
+    cursor: pointer;
 }
 </style>

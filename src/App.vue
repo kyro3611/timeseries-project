@@ -5,7 +5,7 @@
         @update:endDate="endDate = $event" />
 
       <MainTable :key="startDate + endDate" :data="filteredData" :loading="isLoading" :startDate="formattedStartDate"
-        :endDate="formattedEndDate" />
+        :endDate="formattedEndDate" @update-data="updateTableData"/>
     </div>
     <LineChart :key="filteredData" :data="filteredData" :loading="isLoading" />
   </div>
@@ -34,11 +34,6 @@ export default {
   },
   async created() {
     await this.fetchAndFormatData();
-  },
-  watch: {
-    startDate(newVal) {
-      console.log('rogijeiogjieg', newVal)
-    }
   },
   computed: {
     filteredData() {
@@ -73,6 +68,9 @@ export default {
       finally {
         this.isLoading = false;
       }
+    },
+    updateTableData({ index, key, newValue }) {
+        this.timeseriesData[index][key] = parseFloat(newValue) || newValue;
     },
   },
 }

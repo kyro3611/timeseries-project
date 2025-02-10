@@ -14,7 +14,7 @@ export default {
     props: {
         startDate: String,
         endDate: String,
-    },
+    }
 };
 </script>
 

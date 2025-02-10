@@ -19,9 +19,9 @@
                     </div>
                     <tr v-for="(item, index) in data" :key="index">
                         <td class="time-column">{{ item.formattedDate }}</td>
-                        <td>{{ item.ENTSOE_DE_DAM_Price }}</td>
-                        <td>{{ item.ENTSOE_GR_DAM_Price }}</td>
-                        <td>{{ item.ENTSOE_FR_DAM_Price }}</td>
+                        <td contenteditable="true" @focus="storePreviousValue(index, 'ENTSOE_DE_DAM_Price')" @blur="updateValue(index, 'ENTSOE_DE_DAM_Price', $event)">{{ item.ENTSOE_DE_DAM_Price }}</td>
+                        <td contenteditable="true" @focus="storePreviousValue(index, 'ENTSOE_GR_DAM_Price')" @blur="updateValue(index, 'ENTSOE_GR_DAM_Price', $event)">{{ item.ENTSOE_GR_DAM_Price }}</td>
+                        <td contenteditable="true" @focus="storePreviousValue(index, 'ENTSOE_FR_DAM_Price')" @blur="updateValue(index, 'ENTSOE_FR_DAM_Price', $event)">{{ item.ENTSOE_FR_DAM_Price }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -50,12 +50,34 @@ export default {
             required: true,
         },
     },
-    watch: {
-        startDate(newVal) {
-            console.log('table', newVal)
+    data() {
+        return {
+            previousValues: {}
         }
     },
+    methods: {
+        //save previous value for failed validation
+        storePreviousValue(index, key) {
+            this.previousValues[`${index}-${key}`] = this.data[index][key];
+        },
+        updateValue(index, key, event) {
 
+            const newValue = event.target.innerText;
+            //validation check
+            if (isNaN(newValue)) { 
+                alert("Invalid input. Value must be a number between -200 and 200.");
+                event.target.innerText = this.previousValues[`${index}-${key}`];
+                return;
+            }else if (newValue < -200 || newValue > 200) {
+                alert("Invalid input. Value must be between -200 and 200.");
+                //revert previous value
+                event.target.innerText = this.previousValues[`${index}-${key}`];
+                return;
+            }
+            
+            this.$emit("update-data", { index, key, newValue });
+        },
+    },
 };
 </script>
 

@@ -3,6 +3,9 @@
         <div v-if="loading" class="spinner-container">
             <div class="spinner"></div>
         </div>
+        <div v-if="!loading && !data.length" class="no-data-container">
+            No Data for this date range
+        </div>
         <canvas ref="chartCanvas"></canvas>
     </div>
 </template>
@@ -104,10 +107,18 @@ export default {
 </script>
 
 <style>
+
+.no-data-container {
+    margin-left: 20%;
+    margin-top: 30%;
+    font-size: 2vw;
+}
+
 .chart-container {
     height: 80%;
     position: relative;
     flex: 0.8; /* Takes 40% width */
+    border: 4px solid #49708a;
 }
 
 .spinner-container {

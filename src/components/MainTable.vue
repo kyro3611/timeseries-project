@@ -2,6 +2,9 @@
     <div class="table-wrapper">
         <div class="table-container">
             <table>
+                <div v-if="loading" class="spinner-container">
+                    <div class="spinner"></div>
+                </div>
                 <thead>
                     <tr>
                         <th>Date and Time</th>
@@ -11,6 +14,9 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <div v-if="!loading && !data.length" class="no-data-container">
+                        No Data for this date range
+                    </div>
                     <tr v-for="(item, index) in data" :key="index">
                         <td class="time-column">{{ item.formattedDate }}</td>
                         <td>{{ item.ENTSOE_DE_DAM_Price }}</td>
@@ -59,6 +65,7 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100px;
+    margin-left: 200px;
 }
 
 .spinner {
@@ -126,5 +133,11 @@ th {
 .time-column {
     background-color: #49708a;
     color: white;
+}
+
+.no-data-container {
+    margin-top: 30%;
+    margin-left: 20%;
+    font-size: 2vw;
 }
 </style>

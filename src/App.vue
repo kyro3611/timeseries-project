@@ -9,7 +9,7 @@
       <MainTable :key="startDate + endDate" :data="filteredData" :loading="isLoading" :startDate="formattedStartDate"
         :endDate="formattedEndDate" :visibility="visibility" @update-data="updateTableData" />
     </div>
-    <LineChart :key="filteredData" :data="filteredData" :loading="isLoading" />
+    <LineChart :key="filteredData" :data="filteredData" :loading="isLoading" :visibility="visibility"/>
   </div>
 </template>
 

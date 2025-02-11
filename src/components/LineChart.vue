@@ -12,6 +12,7 @@
 
 <script>
 import Chart from "chart.js/auto";
+import { nextTick } from 'vue';
 
 export default {
     props: {
@@ -23,6 +24,10 @@ export default {
             type: Boolean,
             required: true,
         },
+        visibility: {
+            type: Object,
+            required: true,
+        }
     },
     data() {
         return {
@@ -37,6 +42,12 @@ export default {
             },
             deep: true, // Detects changes inside objects of data array
         },
+        visibility: {
+            handler() {
+                this.renderChart();
+            },
+            deep: true,
+        },
     },
     mounted() {
         this.renderChart();
@@ -44,47 +55,55 @@ export default {
     beforeUnmount() {
         if (this.chartInstance) {
             this.chartInstance.destroy(); // Cleanup chart before component is destroyed
+            this.chartInstance = null;
         }
     },
     methods: {
         async renderChart() {
+            await nextTick();
             try {
                 if (!this.data.length) return; // Prevent empty chart
+                if (this.chartInstance) {
+                    this.chartInstance.destroy();
+                    this.chartInstance = null; // Reset instance
+                }
+
+                const ctx = this.$refs.chartCanvas.getContext("2d");
 
                 const labels = this.data.map((item) => item.formattedDate);
-                const datasetDE = this.data.map((item) => item.ENTSOE_DE_DAM_Price);
-                const datasetGR = this.data.map((item) => item.ENTSOE_GR_DAM_Price);
-                const datasetFR = this.data.map((item) => item.ENTSOE_FR_DAM_Price);
 
-                if (this.chartInstance) this.chartInstance.destroy(); // Prevent duplicate charts
+                const datasets = [];
 
-                this.chartInstance = new Chart(this.$refs.chartCanvas, {
+                if (this.visibility.DE) {
+                    datasets.push({
+                        label: "DE",
+                        data: this.data.map(item => item.ENTSOE_DE_DAM_Price),
+                        borderColor: "yellow",
+                        fill: true,
+                    });
+                }
+                if (this.visibility.GR) {
+                    datasets.push({
+                        label: "GR",
+                        data: this.data.map(item => item.ENTSOE_GR_DAM_Price),
+                        borderColor: "blue",
+                        fill: true,
+                    });
+                }
+                if (this.visibility.FR) {
+                    datasets.push({
+                        label: "FR",
+                        data: this.data.map(item => item.ENTSOE_FR_DAM_Price),
+                        borderColor: "red",
+                        fill: true,
+                    });
+                }
+
+                this.chartInstance = new Chart(ctx, {
                     type: "line",
                     data: {
                         labels,
-                        datasets: [
-                            {
-                                label: "DE",
-                                data: datasetDE,
-                                borderColor: "yellow",
-                                backgroundColor: "rgba(0, 0, 255, 0.1)",
-                                fill: true,
-                            },
-                            {
-                                label: "GR",
-                                data: datasetGR,
-                                borderColor: "blue",
-                                backgroundColor: "rgba(0, 255, 0, 0.1)",
-                                fill: true,
-                            },
-                            {
-                                label: "FR",
-                                data: datasetFR,
-                                borderColor: "red",
-                                backgroundColor: "rgba(255, 0, 0, 0.1)",
-                                fill: true,
-                            },
-                        ],
+                        datasets
                     },
                     options: {
                         responsive: true,
@@ -102,12 +121,20 @@ export default {
                 console.error("Error loading JSON:", error);
             }
         },
+        /*updateChart() {
+            console.log('update')
+            if (this.chartInstance && this.chartInstance.data.datasets.length > 0) {
+                console.log('test', this.chartInstance.data.datasets)
+                this.chartInstance.data.datasets.pop(); // Removes last dataset
+                console.log('test', this.chartInstance.data.datasets)
+                this.chartInstance.update(); // Refresh chart
+            }
+        }*/
     },
 };
 </script>
 
 <style>
-
 .no-data-container {
     margin-left: 20%;
     margin-top: 30%;
@@ -117,7 +144,8 @@ export default {
 .chart-container {
     height: 80%;
     position: relative;
-    flex: 0.8; /* Takes 40% width */
+    flex: 0.8;
+    /* Takes 40% width */
     border: 4px solid #49708a;
 }
 
@@ -138,7 +166,12 @@ export default {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>

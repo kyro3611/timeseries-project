@@ -1,21 +1,4 @@
 <template>
-    <div class="show-hide-container">
-        Show/Hide: 
-        <span class="eye-icon-container">
-            DE
-            <font-awesome-icon :icon="visibility.DE ? 'eye' : 'eye-slash'" @click="toggleColumn('DE')" class="eye-icon"/>
-        </span>
-        <span class="eye-icon-container">
-            GR
-            <font-awesome-icon :icon="visibility.GR ? 'eye' : 'eye-slash'" @click="toggleColumn('GR')" class="eye-icon"/>
-        </span>
-        <span class="eye-icon-container">
-            FR
-            <font-awesome-icon :icon="visibility.FR ? 'eye' : 'eye-slash'" @click="toggleColumn('FR')" class="eye-icon"/>
-        </span>
-    </div>
-    
-
     <div class="table-wrapper">
         <div class="table-container">
             <table>
@@ -78,21 +61,17 @@ export default {
             type: Date,
             required: true,
         },
+        visibility: {
+            type: Object,
+            required: true,
+        }
     },
     data() {
         return {
             previousValues: {},
-            visibility: {
-                DE: true,
-                GR: true,
-                FR: true,
-            },
         }
     },
     methods: {
-        toggleColumn(column) {
-            this.visibility[column] = !this.visibility[column];
-        },
         //save previous value for failed validation
         storePreviousValue(index, key) {
             this.previousValues[`${index}-${key}`] = this.data[index][key];

@@ -4,8 +4,10 @@
       <DateRangePicker :startDate="startDate" :endDate="endDate" @update:startDate="startDate = $event"
         @update:endDate="endDate = $event" />
 
+        <ShowHideColumns :visibility="visibility" @update:visibility="visibility = $event"/>
+
       <MainTable :key="startDate + endDate" :data="filteredData" :loading="isLoading" :startDate="formattedStartDate"
-        :endDate="formattedEndDate" @update-data="updateTableData"/>
+        :endDate="formattedEndDate" :visibility="visibility" @update-data="updateTableData" />
     </div>
     <LineChart :key="filteredData" :data="filteredData" :loading="isLoading" />
   </div>
@@ -15,6 +17,7 @@
 import MainTable from './components/MainTable.vue'
 import LineChart from './components/LineChart.vue'
 import DateRangePicker from './components/DateRangePicker.vue'
+import ShowHideColumns from './components/ShowHideColumns.vue'
 import dayjs from 'dayjs'
 
 export default {
@@ -22,14 +25,20 @@ export default {
   components: {
     MainTable,
     LineChart,
-    DateRangePicker
+    DateRangePicker,
+    ShowHideColumns
   },
   data() {
     return {
       timeseriesData: [],
       isLoading: true,
       startDate: null,
-      endDate: null
+      endDate: null,
+      visibility: {
+          DE: true,
+          GR: true,
+          FR: true,
+      },
     };
   },
   async created() {

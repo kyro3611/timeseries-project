@@ -31,11 +31,10 @@ export default {
     },
     data() {
         return {
-            chartInstance: null, // Store the chart instance
+            chartInstance: null,
         };
     },
     watch: {
-        // Re-render chart when data changes
         data: {
             handler() {
                 this.renderChart();
@@ -44,7 +43,7 @@ export default {
         },
         visibility: {
             handler() {
-                this.renderChart();
+                setTimeout (this.renderChart, 500) //we use settimeout to prevent "ctx is null" error, BUT it's NOT the ideal way
             },
             deep: true,
         },
@@ -60,7 +59,7 @@ export default {
     },
     methods: {
         async renderChart() {
-            await nextTick();
+            await nextTick(); //wait for the DOM updates to complete
             try {
                 if (!this.data.length) return; // Prevent empty chart
                 if (this.chartInstance) {

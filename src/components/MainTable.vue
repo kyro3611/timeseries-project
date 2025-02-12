@@ -81,11 +81,11 @@ export default {
             const newValue = event.target.innerText;
             //validation check
             if (isNaN(newValue)) {
-                alert("Invalid input. Value must be a number between -200 and 200.");
+                alert("Price must be a number between -200 and 200.");
                 event.target.innerText = this.previousValues[`${index}-${key}`];
                 return;
             } else if (newValue < -200 || newValue > 200) {
-                alert("Invalid input. Value must be between -200 and 200.");
+                alert("Price must be between -200 and 200.");
                 //revert previous value
                 event.target.innerText = this.previousValues[`${index}-${key}`];
                 return;
@@ -128,7 +128,7 @@ export default {
 .table-wrapper {
     justify-content: center;
     align-items: center;
-    width: 80%;
+    width: 100%;
     height: 100vh;
 }
 
@@ -157,6 +157,14 @@ td {
     border: 1px solid #ccc;
     text-align: center;
     white-space: nowrap;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f5f7fa;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #dbdbdb;
 }
 
 th {

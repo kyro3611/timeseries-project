@@ -39,7 +39,8 @@ export default {
 
 <style>
 .show-hide-container {
-    margin-bottom: 10px;
+    margin-bottom: 30px;
+    margin-left: 20px;
 }
 
 .eye-icon-container {

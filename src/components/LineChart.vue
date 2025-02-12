@@ -142,11 +142,11 @@ export default {
 }
 
 .chart-container {
-    height: 80%;
+    height: 70vh;
     position: relative;
-    flex: 0.8;
-    /* Takes 40% width */
-    border: 4px solid #49708a;
+    border: 4px solid rgb(79 112 156);
+    background: white;
+    box-shadow: 5px 5px 5px rgb(216 232 242);
 }
 
 .spinner-container {

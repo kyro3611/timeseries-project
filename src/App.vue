@@ -1,15 +1,21 @@
 <template>
+  <h1>Timeseries</h1>
   <div class="dashboard">
-    <div class="date-range-and-table">
+    <div class="filters-container">
       <DateRangePicker :startDate="startDate" :endDate="endDate" @update:startDate="startDate = $event"
         @update:endDate="endDate = $event" />
-
-        <ShowHideColumns :visibility="visibility" @update:visibility="visibility = $event"/>
-
-      <MainTable :key="startDate + endDate" :data="filteredData" :loading="isLoading" :startDate="formattedStartDate"
-        :endDate="formattedEndDate" :visibility="visibility" @update-data="updateTableData" />
+      <ShowHideColumns :visibility="visibility" @update:visibility="visibility = $event" />
     </div>
-    <LineChart :key="filteredData" :data="filteredData" :loading="isLoading" :visibility="visibility"/>
+    <div class="table-and-chart-container">
+      <div class="table-component">
+        <MainTable :key="startDate + endDate" :data="filteredData" :loading="isLoading" :startDate="formattedStartDate"
+        :endDate="formattedEndDate" :visibility="visibility" @update-data="updateTableData" />
+      </div>
+      <div class="chart-component">
+        <LineChart :key="filteredData" :data="filteredData" :loading="isLoading" :visibility="visibility" />
+      </div> 
+    </div>
+
   </div>
 </template>
 
@@ -35,9 +41,9 @@ export default {
       startDate: null,
       endDate: null,
       visibility: {
-          DE: true,
-          GR: true,
-          FR: true,
+        DE: true,
+        GR: true,
+        FR: true,
       },
     };
   },
@@ -79,7 +85,7 @@ export default {
       }
     },
     updateTableData({ index, key, newValue }) {
-        this.timeseriesData[index][key] = parseFloat(newValue) || newValue;
+      this.timeseriesData[index][key] = parseFloat(newValue) || newValue;
     },
   },
 }
@@ -87,7 +93,7 @@ export default {
 
 <style>
 .dashboard {
-  display: flex;
+  display: block;
   justify-content: space-between;
   align-items: flex-start;
   gap: 20px;
@@ -96,7 +102,49 @@ export default {
   box-sizing: border-box;
 }
 
-.date-range-and-table {
-  flex: 1;
+.table-and-chart-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Aligns them at the top */
+  gap: 20px;
+  width: 100%;
+  height: 100vh;
+  padding: 10px;
+}
+
+.table-component {
+  flex: 0.4;
+}
+
+.chart-component {
+  flex: 0.55;
+}
+
+body {
+  background: linear-gradient(rgb(216 232 242), rgb(79 112 156));
+  background-attachment: fixed; /* Ensures the gradient stays in place */
+  background-size: cover; /* Covers the entire viewport */
+  font-family: "Arial", sans-serif;
+}
+
+h1 {
+  font-size: 3rem;
+  font-family: "Arial", sans-serif;
+  text-align: center;
+  color: #49708a;
+}
+
+/* responsiveness for smaller screens, vertical layout*/
+@media (max-width: 768px) {
+  .table-and-chart-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .table-component,
+  .chart-component {
+    width: 100%;
+    min-width: unset;
+  }
 }
 </style>
